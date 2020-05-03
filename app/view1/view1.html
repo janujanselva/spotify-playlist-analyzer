@@ -1,0 +1,28 @@
+
+<div ng-init="init()">
+    <input ng-model="playlistid">{{playlistid}}
+
+    <button ng-click="getPlaylist()">Search!</button>
+
+    <!-- <div>
+        {{tracks}}
+    </div> -->
+    <table>
+        <tr>
+            <td>
+                track name
+            </td>
+            <td>
+                track artist
+            </td>
+        </tr>
+        <tr ng-repeat="item in tracks">
+            <td>
+                {{item.name}}
+            </td>
+            <td>
+                {{item.album}}
+            </td>
+        </tr>
+    </table>
+</div>
