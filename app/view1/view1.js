@@ -55,7 +55,7 @@ angular.module('myApp.view1', ['ngRoute'])
       console.log(items);
     }, function errorCallback(response){
       console.log(response);
-      return {};
+      $scope.error = response.data.error.message;
     })
   };
   
