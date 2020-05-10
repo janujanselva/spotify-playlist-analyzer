@@ -4,6 +4,8 @@
 
     <button ng-click="getPlaylist()">Search!</button>
 
+    <button ng-click="analyze()" ng-hide="!tracks">Analyze</button>
+    <h3>{{category}}</h3>
     <div ng-if="error">
         Error retrieving playlist: {{error}}
     </div>
@@ -24,7 +26,7 @@
                 {{item.name}}
             </td>
             <td>
-                {{item.album}}
+                {{item.id}}
             </td>
         </tr>
     </table>

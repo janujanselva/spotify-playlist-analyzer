@@ -59,6 +59,60 @@ angular.module('myApp.view1', ['ngRoute'])
     })
   };
   
+
+  spotfiyApi.audioFeatures = function(tracks, $scope){
+    $http({
+      method: 'GET',
+      url: 'https://api.spotify.com/v1/audio-features',
+      params: {
+        'ids': tracks
+      },
+      headers: {
+        'Authorization' : 'Bearer ' + spotfiyApi.token
+      }
+    }).then( function successCallback(response){
+      function classify(stats){
+        let result = '';
+        if(stats.dance > 0.5 && stats.energy > 0.5 && stats.inst <= 0.5 && tempo > 120){
+          result = 'club';
+        }
+        else if(stats.dance <= 0.5 && stats.energy <= 0.5 && stats.inst > 0.5 && stats.tempo < 100){
+          result = 'study';
+        }
+        else{
+          result = 'gym';
+        }
+        return result;
+      }
+
+
+      let sumInst = 0;
+      let sumDance = 0;
+      let sumEnergy = 0;
+      let sumTempo = 0;
+
+      let trackStats = response.data.audio_features;
+
+      for(let i = 0; i < trackStats.length; i++){
+        sumInst += trackStats.instrumentalness;
+        sumDance += trackStats.danceability;
+        sumEnergy += trackStats.energy;
+        sumTempo += trackStats.tempo;
+      }
+      let stats = {
+        'inst' : sumInst/trackStats.length,
+        'dance' : sumDance/trackStats.length,
+        'energy' : sumEnergy/trackStats.length,
+        'tempo' : sumTempo/trackStats.length
+      }
+
+      //throwing error for setting category
+      let results = classify(stats);
+      $scope.category = results;
+    }, function errorCallback(response){
+      console.log(response);
+    })
+  }
   return spotfiyApi;
 }])
 
@@ -69,9 +123,27 @@ angular.module('myApp.view1', ['ngRoute'])
     
   }
 
-  $scope.getPlaylist = async function(){
+  $scope.getPlaylist = function(){
 
-    $scope.tracks = await spotfiyApi.getPlaylist($scope.playlistid, $scope);
+    $scope.tracks = spotfiyApi.getPlaylist($scope.playlistid, $scope);
     console.log($scope.tracks);
+  }
+
+
+
+  $scope.analyze = function(){
+    //pass in the list of ids as a comma seperated string
+    let tracks = '';
+    for(let i = 0; i < $scope.tracks.length; i++){
+      //if at the end of the array, dont add a comma
+      if(i == $scope.tracks.length - 1){
+        tracks = tracks.concat($scope.tracks[i].id);
+      }
+      else{
+        tracks = tracks.concat($scope.tracks[i].id, ',');
+      }
+
+    }
+    spotfiyApi.audioFeatures(tracks);
   }
 }]);  
