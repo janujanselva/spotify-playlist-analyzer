@@ -5,4 +5,7 @@ var app = express();
 
 app.use(morgan('dev'));
 app.use(gzippo.staticGzip("" + __dirname + "/"));
-app.listen(process.env.PORT || 5000);
+app.get('/', function(req, res) {
+    res.sendfile('app/view1/view1.html', {root: __dirname })
+});
+var server = app.listen(process.env.PORT || 80);
