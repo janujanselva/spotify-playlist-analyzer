@@ -1,33 +1,54 @@
 
 <div ng-init="init()">
-    <input ng-model="playlistid">{{playlistid}}
+    <div class="pt-4 row">
+        <div class="col">
+            <input ng-model="playlistid">
 
-    <button ng-click="getPlaylist()">Search!</button>
+            <button ng-click="getPlaylist()">Search!</button>
+        
+            <button ng-click="analyze()" ng-hide="!tracks">Analyze</button>
+        </div>
+        
+        <div class="col" ng-hide="!category">
+            <p>This playlist is great for the <b>{{category}}</b></p>
+        </div>
+    </div>
 
-    <button ng-click="analyze()" ng-hide="!tracks">Analyze</button>
-    <h3>{{category}}</h3>
     <div ng-if="error">
         Error retrieving playlist: {{error}}
     </div>
-    <!-- <div>
-        {{tracks}}
-    </div> -->
-    <table>
-        <tr>
-            <td>
-                track name
-            </td>
-            <td>
-                track artist
-            </td>
-        </tr>
-        <tr ng-repeat="item in tracks">
-            <td>
-                {{item.name}}
-            </td>
-            <td>
-                {{item.id}}
-            </td>
-        </tr>
-    </table>
+
+    <div class="pt-4 row" ng-if="tracks">
+        <div class="col">
+
+
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Track Name</th>
+                <th scope="col">Track ID</th>
+                <th scope="col">Track Artist</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in tracks">
+                <th scope="row">
+                    {{item.num}}
+                </th>
+                <td>
+                    {{item.name}}
+                </td>
+                <td>
+                    {{item.id}}
+                </td>
+                <td>
+                    {{item.artists}}
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+        </div>
+    </div>
 </div>

@@ -9,6 +9,9 @@ angular.module('myApp.view1', ['ngRoute'])
   });
 }])
 .factory('spotifyApi', ['$http', function($http){
+
+  //factory service to handle spotify api calls
+
   var spotfiyApi = {};
   spotfiyApi.clientId = "a1d89dc9d68c43d095e3a6d44fbfc76a";
   spotfiyApi.clientSecret = "bd17f8a23a3c45a18bfa1b593cd0977e";
@@ -16,9 +19,6 @@ angular.module('myApp.view1', ['ngRoute'])
 
   var encoded = btoa(spotfiyApi.clientId + ":" + spotfiyApi.clientSecret);
 
-  spotfiyApi.doSomething = function(){
-    console.log(encoded);
-  }
   spotfiyApi.setAccessToken = function(){
     $http({
       method: 'POST',
@@ -45,9 +45,13 @@ angular.module('myApp.view1', ['ngRoute'])
       }
     }).then( function successCallback(response){
       console.log(response.data.tracks);
+      
       $scope.tracks = response.data.tracks.items;
       var items = [];
       for(let i = 0; i < $scope.tracks.length; i++){
+        $scope.tracks[i].track.num = i;
+        //rewrite the artists object to only include the primary artist for now
+        $scope.tracks[i].track.artists = $scope.tracks[i].track.artists[0].name;
         items.push($scope.tracks[i].track);
       }
 
@@ -71,6 +75,8 @@ angular.module('myApp.view1', ['ngRoute'])
         'Authorization' : 'Bearer ' + spotfiyApi.token
       }
     }).then( function successCallback(response){
+
+      
       function classify(stats){
         let result = '';
         if(stats.dance > 0.5 && stats.energy > 0.5 && stats.inst <= 0.5 && tempo > 120){
@@ -104,10 +110,11 @@ angular.module('myApp.view1', ['ngRoute'])
         'dance' : sumDance/trackStats.length,
         'energy' : sumEnergy/trackStats.length,
         'tempo' : sumTempo/trackStats.length
-      }
+      };
 
       //throwing error for setting category
       let results = classify(stats);
+      console.log(results);
       $scope.category = results;
     }, function errorCallback(response){
       console.log(response);
@@ -117,7 +124,10 @@ angular.module('myApp.view1', ['ngRoute'])
 }])
 
 .controller('View1Ctrl', ['spotifyApi','$scope', function(spotfiyApi, $scope) {
+
+  //get access token on page initialization
   $scope.init = function(){
+
     console.log('encoding data');
     spotfiyApi.setAccessToken();
     
@@ -127,8 +137,8 @@ angular.module('myApp.view1', ['ngRoute'])
 
     $scope.tracks = spotfiyApi.getPlaylist($scope.playlistid, $scope);
     console.log($scope.tracks);
-  }
 
+  }
 
 
   $scope.analyze = function(){
@@ -144,6 +154,7 @@ angular.module('myApp.view1', ['ngRoute'])
       }
 
     }
-    spotfiyApi.audioFeatures(tracks);
+
+    spotfiyApi.audioFeatures(tracks, $scope);
   }
 }]);  
