@@ -12,7 +12,10 @@
     "angular-loader": "^1.7.5",
     "angular-route": "^1.7.5",
     "animate": "^1.0.0",
+    "express": "^4.17.1",
+    "gzippo": "^0.2.0",
     "html5-boilerplate": "0.0.1",
+    "morgan": "^1.10.0",
     "ng-animate": "^0.3.4"
   },
   "devDependencies": {
