@@ -5,7 +5,8 @@ This project is an application to analyze Spotify playlists and categorize it ba
 This application is built in AngularJS.
 
 You can access the site at:
-link
+https://spotify-playlist-analyzer1.herokuapp.com/
+
 
 ## Spotify API Playlist ID
 
@@ -39,4 +40,4 @@ To run the application:
 ## To Do:
 - create a results page with the classification
 - make the classification algorithm more robust
-- change from client credentials to user credentials flow
+- change from client credentials to user
